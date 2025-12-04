@@ -23,11 +23,11 @@ namespace VkVoxel {
         VmaAllocation indexAllocation;
 
     protected:
-        virtual void prepare(const VertexPool& vertices, const std::vector<uint32_t>& indices);
+        virtual void prepare(const VertexPool& vertices, const IntPool& indices);
 
     private:
         void prepareVertexBuffer(const VertexPool& vertices);
-        void prepareIndexBuffer(const std::vector<uint32_t>& indices);
+        void prepareIndexBuffer(const IntPool& indices);
 
         std::shared_ptr<VkManager> _manager;
         bool _prepared;

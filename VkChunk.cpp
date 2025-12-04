@@ -12,7 +12,7 @@ namespace VkVoxel {
     }
 
     void VkChunk::prepare( const VertexPool &vertices,
-                           const std::vector<uint32_t> &indices ) {
+                           const IntPool &indices ) {
         prepareVertexBuffer(vertices);
         prepareIndexBuffer(indices);
 
@@ -37,7 +37,7 @@ namespace VkVoxel {
         
         void* data;
         vmaMapMemory(allocator, stagingAllocation, &data);
-	     vertices.storeInto( data );
+	     vertices.storeInto( (Vertex*)data );
         //memcpy(data, vertices.data(), (size_t)bufferSize);
         vmaUnmapMemory(allocator, stagingAllocation);
 
@@ -62,10 +62,10 @@ namespace VkVoxel {
         vmaDestroyBuffer(allocator, stagingBuffer, stagingAllocation);
     }
 
-    void VkChunk::prepareIndexBuffer(const std::vector<uint32_t>& indices) {
+    void VkChunk::prepareIndexBuffer( const IntPool &indices ) {
         VmaAllocator allocator = _manager->getAllocator();
 
-        VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+        VkDeviceSize bufferSize = sizeof(uint32_t) * indices.size();
         VkBufferCreateInfo stagingBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
         stagingBufferInfo.size = bufferSize;
         stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
@@ -80,7 +80,8 @@ namespace VkVoxel {
 
         void* data;
         vmaMapMemory(allocator, stagingAllocation, &data);
-        memcpy(data, indices.data(), (size_t)bufferSize);
+	     indices.storeInto( (uint32_t *)data );
+            //memcpy(data, indices.data(), (size_t)bufferSize);
         vmaUnmapMemory(allocator, stagingAllocation);
 
         if (!_prepared) {

@@ -41,9 +41,9 @@ namespace VkVoxel {
 
     void Chunk::build(const std::vector<BlockType>& blockTypes) {
 	    struct VertexPool vertices;
-
-        std::vector<Vertex> g_vertices;
-        std::vector<uint32_t> indices;
+	    struct IntPool indices;
+        //std::vector<Vertex> g_vertices;
+        //std::vector<uint32_t> indices;
         vertices.reserve(_lastSize);
         indices.reserve(_lastSize);
 

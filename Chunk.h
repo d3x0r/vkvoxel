@@ -28,7 +28,7 @@ namespace VkVoxel {
         virtual void cleanup() = 0;
 
     protected:
-        virtual void prepare(const VertexPool& vertices, const std::vector<uint32_t>& indices) = 0;
+        virtual void prepare(const VertexPool& vertices, const IntPool& indices) = 0;
 
     private:
 	     TRANSFORM *_model = EXTERNAL_NAME(CreateNamedTransform)( NULL );
