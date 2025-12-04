@@ -3,7 +3,8 @@
 
 #include <cstdint>
 #include <vector>
-#include "glm/mat4x4.hpp"
+#define NEED_VECTLIB_ALIASES
+#include "sack_ucb_filelib.h"
 #include "BlockType.h"
 #include "Vertex.h"
 
@@ -18,17 +19,20 @@ namespace VkVoxel {
 
         Chunk(int x, int y);
         void build(const std::vector<BlockType>& blockTypes);
-        glm::mat4x4 getTransform(const glm::mat4x4& proj, const glm::mat4x4& view);
+	     PMatrix getTransform( PMatrix out,
+	                           PMatrix proj,
+	                           PMatrix view);
         uint32_t getVertexCount();
         uint32_t getIndexCount();
 
         virtual void cleanup() = 0;
 
     protected:
-        virtual void prepare(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) = 0;
+        virtual void prepare(const VertexPool& vertices, const std::vector<uint32_t>& indices) = 0;
 
     private:
-        glm::mat4x4 _model;
+	     TRANSFORM *_model = EXTERNAL_NAME(CreateNamedTransform)( NULL );
+
         uint32_t _xPos;
         uint32_t _yPos;
         size_t _lastSize;

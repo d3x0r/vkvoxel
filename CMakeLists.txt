@@ -5,6 +5,7 @@ set (CMAKE_CXX_STANDARD 17)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 find_package(glm REQUIRED)
+set_property(GLOBAL PROPERTY USE_FOLDERS On)
 
 set (GLSL_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe")
 file(GLOB_RECURSE GLSL_SOURCE_FILES
@@ -24,9 +25,28 @@ foreach(GLSL ${GLSL_SOURCE_FILES})
   list(APPEND SPIRV_BINARY_FILES ${SPIRV})
 endforeach(GLSL)
 
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/build/output/include" )
+LINK_DIRECTORIES( "${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/build/output/lib" )
+
 add_custom_target(
   Shaders
   DEPENDS ${SPIRV_BINARY_FILES}
+)
+
+add_definitions( -D__DISABLE_UDP_SYSLOG__ -D__STATIC_GLOBALS__ -DMAKE_RCOORD_SINGLE )
+
+set( vkSources 
+  VkChunk.h
+  VkChunk.cpp
+  VkManager.h
+  VkManager.cpp
+  VkRenderer.h
+  VkRenderer.cpp
+  VkTextureAtlas.h
+  VkTextureAtlas.cpp
+  VkVoxelApplication.h
+  VkVoxelApplication.cpp
+  VkUtil.h
 )
 
 add_executable(vkvoxel
@@ -51,20 +71,15 @@ add_executable(vkvoxel
   TextureAtlas.h
   Vertex.h
   Vertex.cpp
-  VkChunk.h
-  VkChunk.cpp
-  VkManager.h
-  VkManager.cpp
-  VkRenderer.h
-  VkRenderer.cpp
-  VkTextureAtlas.h
-  VkTextureAtlas.cpp
-  VkVoxelApplication.h
-  VkVoxelApplication.cpp
-  VkUtil.h
+  ${vkSources}
   World.h
   World.cpp
+  sack_ucb_filelib.cc
 )
+
+
+
+source_group("Vulkan Interface" FILES ${vkSources})
 
 add_dependencies(vkvoxel Shaders)
 
@@ -75,7 +90,6 @@ target_include_directories(vkvoxel PRIVATE
 target_link_libraries(vkvoxel PRIVATE
   Vulkan::Vulkan
   glfw
-  glm
 )
 
 add_custom_command(TARGET vkvoxel POST_BUILD

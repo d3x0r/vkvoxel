@@ -12,22 +12,23 @@ namespace VkVoxel {
         BlockType();
 
         uint32_t frontTexture = 0;
-        glm::vec3 frontColor = { 1.0f, 1.0f, 1.0f };
+        VECTOR frontColor = { 1.0f, 1.0f, 1.0f };
+	     glm::vec3 g_frontColor      = { 1.0f, 1.0f, 1.0f };
 
         uint32_t leftTexture = 0;
-        glm::vec3 leftColor = { 1.0f, 1.0f, 1.0f };
+	     VECTOR leftColor       = { 1.0f, 1.0f, 1.0f };
 
         uint32_t rightTexture = 0;
-        glm::vec3 rightColor = { 1.0f, 1.0f, 1.0f };
+	     VECTOR rightColor      = { 1.0f, 1.0f, 1.0f };
 
         uint32_t backTexture = 0;
-        glm::vec3 backColor = { 1.0f, 1.0f, 1.0f };
+	     VECTOR backColor       = { 1.0f, 1.0f, 1.0f };
 
         uint32_t topTexture = 0;
-        glm::vec3 topColor = { 1.0f, 1.0f, 1.0f };
+	     VECTOR topColor        = { 1.0f, 1.0f, 1.0f };
 
         uint32_t bottomTexture = 0;
-        glm::vec3 bottomColor = { 1.0f, 1.0f, 1.0f };
+	     VECTOR bottomColor     = { 1.0f, 1.0f, 1.0f };
 
     };
 };

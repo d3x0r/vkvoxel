@@ -3,6 +3,11 @@
 
 #include <chrono>
 #include <memory>
+#define NEED_VECTLIB_ALIASES
+#define VECTOR_LIBRARY_IS_EXTERNAL
+#include "sack_ucb_filelib.h"
+#undef _5
+#undef _15
 
 #include "Chunk.h"
 #include "Renderer.h"

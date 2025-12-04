@@ -1,3 +1,5 @@
+
+
 #include "VkChunk.h"
 
 namespace VkVoxel {
@@ -9,16 +11,17 @@ namespace VkVoxel {
         uint32_t frameCount = _manager->getFrameCount();
     }
 
-    void VkChunk::prepare(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) {
+    void VkChunk::prepare( const VertexPool &vertices,
+                           const std::vector<uint32_t> &indices ) {
         prepareVertexBuffer(vertices);
         prepareIndexBuffer(indices);
 
         _prepared = true;
     }
 
-    void VkChunk::prepareVertexBuffer(const std::vector<Vertex>& vertices) {
+    void VkChunk::prepareVertexBuffer(const VertexPool& vertices) {
         VmaAllocator allocator = _manager->getAllocator();
-        VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+        VkDeviceSize bufferSize = sizeof(Vertex) * vertices.size();
 
         VkBufferCreateInfo stagingBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
         stagingBufferInfo.size = bufferSize;
@@ -34,7 +37,8 @@ namespace VkVoxel {
         
         void* data;
         vmaMapMemory(allocator, stagingAllocation, &data);
-        memcpy(data, vertices.data(), (size_t)bufferSize);
+	     vertices.storeInto( data );
+        //memcpy(data, vertices.data(), (size_t)bufferSize);
         vmaUnmapMemory(allocator, stagingAllocation);
 
         if (!_prepared) {

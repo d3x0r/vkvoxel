@@ -1,6 +1,6 @@
 #ifndef __TEXTURE_ATLAS_H_
 #define __TEXTURE_ATLAS_H_
-
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include "stb/stb_image.h"

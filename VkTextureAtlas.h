@@ -1,5 +1,8 @@
 #ifndef __VK_TEXTURE_ATLAS_H_
 #define __VK_TEXTURE_ATLAS_H_
+#include "sack_ucb_filelib.h"
+#undef _5
+#undef _15
 
 #include "TextureAtlas.h"
 #include "VkManager.h"

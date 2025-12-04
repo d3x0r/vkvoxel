@@ -97,7 +97,7 @@ namespace VkVoxel {
 #ifdef NDEBUG
         const bool enableValidationLayers = false;
 #else
-        const bool enableValidationLayers = true;
+        const bool enableValidationLayers = false;
 #endif
 
         // Setup the Vulkan instance
@@ -165,15 +165,18 @@ namespace VkVoxel {
 
     void VkRenderer::updateUniformBuffer(uint32_t imageIndex) {
         VmaAllocator allocator = _manager->getAllocator();
-
-        glm::mat4x4 proj = _camera->getProjection();
-        glm::mat4x4 view = _camera->getView();
-        proj[1][1] *= -1;
+	    _camera->updateCamera();
+        PMatrix proj = _camera->getProjection();
+	     PMatrix view           = _camera->getView();
+	     MATRIX tmp; memcpy( tmp , proj, sizeof( tmp ) );
+        tmp[1][1] *= -1;
+//	     view[0][ 1 ][ 1 ] *= -1;
 
         char* data = (char *)_uniformBufferMemory[imageIndex].pMappedData;
         for (size_t i = 0; i < _chunks.size(); i++) {
-            UniformBufferObject ubo = { _chunks[i]->getTransform(proj, view) };
-            memcpy(data + (_minUboAlignment * i), &ubo, sizeof(ubo));
+            UniformMatrixBufferObject ubo;
+		     _chunks[ i ]->getTransform( &ubo.transform, &tmp, view );
+		     memcpy( data + ( _minUboAlignment * i ), &ubo, sizeof( ubo ) );
         }
 
     }
@@ -667,7 +670,7 @@ namespace VkVoxel {
             VkDescriptorBufferInfo bufferInfo = {};
             bufferInfo.buffer = uniformBuffers[i];
             bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(UniformBufferObject);
+            bufferInfo.range = sizeof(UniformMatrixBufferObject);
 
             VkDescriptorImageInfo imageInfo = {};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -1050,7 +1053,7 @@ namespace VkVoxel {
         VkPhysicalDeviceProperties props;
         vkGetPhysicalDeviceProperties(physicalDevice, &props);
         
-        size_t dynamicAlignment = sizeof(UniformBufferObject);
+        size_t dynamicAlignment = sizeof(UniformMatrixBufferObject);
         size_t minUboAlignment = (size_t)props.limits.minUniformBufferOffsetAlignment;
 
         if (minUboAlignment > 0) {

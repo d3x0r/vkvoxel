@@ -1,8 +1,11 @@
 #ifndef __CAMERA_H_
 #define __CAMERA_H_
+#define NEED_VECTLIB_ALIASES
+#define VECTOR_LIBRARY_IS_EXTERNAL
+#include "sack_ucb_filelib.h"
+#undef _5
+#undef _15
 
-#include "glm/vec3.hpp"
-#include "glm/mat4x4.hpp"
 #include "Frustum.h"
 
 namespace VkVoxel {
@@ -11,35 +14,41 @@ namespace VkVoxel {
         Camera(uint32_t resWidth, uint32_t resHeight);
         
         void rebuildProjection(uint32_t resWidth, uint32_t resHeight);
-        glm::mat4x4 getProjection();
-        glm::mat4x4 getView();
-        
-        void setPosition(const glm::vec3& position);
-        glm::vec3 getPosition();
-        glm::vec3 getFront();
+        PMatrix getProjection();
+	     PMatrix getView();
+	     
+        void setPosition(const PCVECTOR position);
+	     PVECTOR getPosition();
+	     PVECTOR getFront();
 
         void setRotation(float pitch, float yaw);
         float getPitch();
         float getYaw();
 
-        void move(glm::vec3 direction, float amount);
+        void move(PCVECTOR direction, float amount);
 
         Frustum getFrustum();
-    private:
+	     void updateCamera();
+
+	   private:
+
         // Our view and projection matrix
-        glm::mat4x4 _projection;
-        glm::mat4x4 _view;
+        MATRIX _projection;
+	   MATRIX _view;
 
         // Our FPS camera state.
-        glm::vec3 _position;
-        glm::vec3 _front;
-        float _pitch;
+        VECTOR _position;
+	   VECTOR _front;
+
+       VECTOR4 rotation = { 0, 1, 0, 0 };
+	     VECTOR4 orientation = { 0, 1, 0, 0 };
+	     ;
+	     float _pitch;
         float _yaw;
 
         // Our cameras frustum
         Frustum _frustum;
 
-        void updateCamera();
     };
 };
 

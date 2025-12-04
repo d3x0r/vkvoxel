@@ -1,6 +1,11 @@
 #include <array>
 #include <set>
 #include <string>
+#include "sack_ucb_filelib.h"
+#undef _5
+#undef _15
+#undef Allocate
+
 #include "VkManager.h"
 
 #define VMA_IMPLEMENTATION

@@ -31,7 +31,8 @@ namespace VkVoxel {
             for (int xBlock = 0; xBlock < CHUNK_SIZE; xBlock++) {
                 for (int zBlock = 0; zBlock < CHUNK_SIZE; zBlock++) {
                     float noiseHeight = (fastNoise.GetNoise((CHUNK_SIZE * _chunks[chunk]->xPos) + xBlock, (CHUNK_SIZE * _chunks[chunk]->zPos) + zBlock)) * 64;
-                    int height = glm::max((int)floor(noiseHeight) + 64, 1);
+				       int ht     = (int)floor( noiseHeight ) + 64;
+                    int height = (ht>1?ht: 1);
                     for (int yBlock = 0; yBlock < height; yBlock++) {
                         if (yBlock == (height - 1)) {
                             _chunks[chunk]->blocks[yBlock][xBlock][zBlock] = 1;
@@ -54,21 +55,31 @@ namespace VkVoxel {
         auto currentTime = std::chrono::high_resolution_clock::now();
         float tickTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - _lastTime).count();
 
-        glm::vec3 cameraPos = _camera->getPosition();
-        glm::vec3 cameraFront = _camera->getFront();
+        PVECTOR cameraPos = _camera->getPosition();
+	     PVECTOR cameraFront     = _camera->getFront();
         float yaw = _camera->getYaw();
         float pitch = _camera->getPitch();
+        float cameraSpeed = 2.50f;
+        float cameraSensitivity = 0.0005f;
 
-        float cameraSpeed = 25.0f;
-        float cameraSensitivity = 0.5f;
-
+        VECTOR tmp;
         // Update the camera position
-        cameraPos += (cameraFront * tickTime * (inputState.forwardSpeed - inputState.backwardSpeed) * cameraSpeed);
-        cameraPos += glm::normalize(glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f))) * tickTime * (inputState.rightSpeed - inputState.leftSpeed) * cameraSpeed;
+	     addscaled( cameraPos, cameraPos, cameraFront,
+	                tickTime
+	                     * ( inputState.forwardSpeed - inputState.backwardSpeed )
+	                     * cameraSpeed );
+        //cameraPos += (cameraFront * tickTime * (inputState.forwardSpeed - inputState.backwardSpeed) * cameraSpeed);
+	      addscaled( cameraPos, cameraPos, normalize( crossproduct( tmp, cameraFront, _Y ) ),
+                     tickTime
+                         * ( inputState.rightSpeed - inputState.leftSpeed )
+	               * cameraSpeed );
+        //cameraPos += glm::normalize(glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f))) * tickTime * (inputState.rightSpeed - inputState.leftSpeed) * cameraSpeed;
 
         // Update the camera rotation
         yaw += inputState.yawSpeed * cameraSensitivity;
         pitch += inputState.pitchSpeed * cameraSensitivity;
+        //if( yaw || pitch )
+	     //printf( "yaw pitch: %g %g\n", yaw, pitch );
         if (pitch > 89.0f) {
             pitch = 89.0f;
         }

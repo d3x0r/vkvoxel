@@ -5,7 +5,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "glm/mat4x4.hpp"
+#include "sack_ucb_filelib.h"
+#undef _5
+#undef _15
 #include <vulkan/vulkan.h>
 
 namespace VkVoxel {
@@ -24,8 +26,8 @@ namespace VkVoxel {
         std::vector<VkPresentModeKHR> presentModes;
     };
 
-    struct UniformBufferObject {
-        glm::mat4x4 transform ;
+    struct UniformMatrixBufferObject {
+        MATRIX transform ;
     };
 
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
