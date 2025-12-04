@@ -59,7 +59,7 @@ namespace VkVoxel {
 	     PVECTOR cameraFront     = _camera->getFront();
         float yaw = _camera->getYaw();
         float pitch = _camera->getPitch();
-        float cameraSpeed = 2.50f;
+        float cameraSpeed = 10.0f;
         float cameraSensitivity = 0.0005f;
 
         VECTOR tmp;

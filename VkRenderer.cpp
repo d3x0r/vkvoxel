@@ -169,7 +169,7 @@ namespace VkVoxel {
         PMatrix proj = _camera->getProjection();
 	     PMatrix view           = _camera->getView();
 	     MATRIX tmp; memcpy( tmp , proj, sizeof( tmp ) );
-        tmp[1][1] *= -1;
+//        tmp[1][1] *= -1;
 //	     view[0][ 1 ][ 1 ] *= -1;
 
         char* data = (char *)_uniformBufferMemory[imageIndex].pMappedData;

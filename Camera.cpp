@@ -58,45 +58,6 @@ void MygluPerspective(
 #undef m
 }
 
-void LookAt( PMatrix mat, PCVECTOR eye, PCVECTOR center, PCVECTOR up ) {
-#define m ( *mat )
-	VECTOR f;
-	sub( f, center, _0 );
-	normalize( f );
-	VECTOR upn;
-	SetPoint( upn, up );
-	normalize( upn );
-	VECTOR s;
-	crossproduct( s, f, upn );
-	normalize( s );
-	VECTOR u;
-	crossproduct( u, s, f );
-	m[ 0 ][ 0 ] = s[ 0 ];
-	m[ 1 ][ 0 ] = s[ 1 ];
-	m[ 2 ][ 0 ] = s[ 2 ];
-	m[ 0 ][ 3 ] = 0.0f;
-
-	m[ 0 ][ 1 ] = u[ 0 ];
-	m[ 1 ][ 1 ] = u[ 1 ];
-	m[ 2 ][ 1 ] = u[ 2 ];
-	m[ 1 ][ 3 ] = 0.0f;
-
-	m[ 0 ][ 2 ] = -f[ 0 ];
-	m[ 1 ][ 2 ] = -f[ 1 ];
-	m[ 2 ][ 2 ] = -f[ 2 ];
-	m[ 2 ][ 3 ] = 0.0f;
-	m[ 3 ][ 0 ] = 0.0f;
-	m[ 3 ][ 1 ] = 0.0f;
-	m[ 3 ][ 2 ] = 0.0f;
-	m[ 3 ][ 3 ] = 1.0f;
-	ApplyInverseRotation( (PCTRANSFORM)m, m[ 3 ], eye );
-	m[ 3 ][ 0 ] = -( eye[ 0 ] * s[ 0 ] + eye[ 1 ] * s[ 1 ] + eye[ 2 ] * s[ 2 ] );
-	m[ 3 ][ 1 ] = -( eye[ 0 ] * u[ 0 ] + eye[ 1 ] * u[ 1 ] + eye[ 2 ] * u[ 2 ] );
-	m[ 3 ][ 2 ] = ( eye[ 0 ] * f[ 0 ] + eye[ 1 ] * f[ 1 ] + eye[ 2 ] * f[ 2 ] );
-	// m[ 3 ][ 2 ] = -m[ 3 ][ 2 ];
-	//  m[ 3 ][ 2 ] *= -1;
-	//  Translate
-}
 
 Camera::Camera( uint32_t resWidth, uint32_t resHeight ) {
 
@@ -159,7 +120,7 @@ PVECTOR Camera::getFront() { return _front; }
 Frustum Camera::getFrustum() { return _frustum; }
 
 void Camera::updateCamera() {
-	lq_level_look( orientation, orientation, _pitch, _yaw, 0.016 );
+	lq_level_look( orientation, orientation, -_pitch, _yaw, 0.016 );
 
 	// get view matrix, with position translated appropriately
 	lq_matrix( &_view, orientation, _position );

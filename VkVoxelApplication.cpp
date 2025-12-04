@@ -88,7 +88,7 @@ namespace VkVoxel {
 	    renderer->setWindow( window );
 
 	    camera = std::make_shared<Camera>( WINDOW_WIDTH, WINDOW_HEIGHT );
-	    VECTOR tmp = { 0, 2, -8 };
+	    VECTOR tmp = { 0, -72, -8 };
         camera->setPosition( tmp );
         renderer->initializeDevice();
 
